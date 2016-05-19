@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "iOSFormUtils"
-  s.version          = "0.0.1"
+  s.version          = "0.0.2"
   s.summary          = "iOSFormUtils helps you developping validated forms in iOS apps."
 
 # This description is used to generate tags and improve search results.
@@ -29,6 +29,6 @@ iOSFormUtils helps you developping validated forms in iOS apps. You could use it
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'iOSFormUtils/**/*'
+  s.source_files = 'iOSFormUtils'
   
 end
