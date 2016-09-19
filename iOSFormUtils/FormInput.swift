@@ -33,7 +33,7 @@ public class FormInput: UITextField {
   private var inputAccessory: UIView!
   private var validationHandler: ValidatedFormInput!
   var validationDelegate: ValidatedFormInputDelegate!
-  var validationType = ValidatedFormInputType.NoValidation
+  public var validationDataSource: ValidatedFormInputDataSource!
   
   // MARK: Superclass overrides
   override init(frame: CGRect) {

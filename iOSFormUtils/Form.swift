@@ -11,11 +11,30 @@ import Foundation
 // MARK: Protocols
 
 /// Delegate protocol to handle form submitting
-public protocol ValidatedFormKeyboardDelegate {
+public protocol FormDelegate {
   /**
    Triggered when the keybiard return key is touched on the last field.
    */
   func goReturnKeyTouched()
+  
+  /*
+   Returns the first input of a form
+   
+   - Parameter form: The form
+   
+   - Return: The first input.
+   */
+  func getFirstInput(form: Form) -> FormInput
+  
+  /*
+   Returns the following input of a form input
+   
+   - Parameter form: The form
+   - Parameter currentInput: The current input
+   
+   - Return: If the current input is the last one, nil. If not, the following input.
+   */
+  func getNextInput(form: Form, currentInput: FormInput) -> FormInput?
 }
 
 // MARK: Class
@@ -32,7 +51,10 @@ public class Form: UIScrollView {
   var keyboardViewHeight: CGFloat = 216
   
   /// The stored delegate
-  public var keyboardDelegate: ValidatedFormKeyboardDelegate!
+  public var formDelegate: FormDelegate!
+  
+  /// The current input which has been focused
+  private var currentInput: FormInput!
   
   /// The form inputs
   public var inputs: [FormInput] = [] {
@@ -80,6 +102,16 @@ public class Form: UIScrollView {
       name: tfReturnedNotifName,
       object: nil
     )
+    
+    NSNotificationCenter.defaultCenter().addObserver(
+      self,
+      selector: #selector(Form.textFieldBecameFirstResponder(_:)),
+      name: tfBecameFirstResponderNotifName,
+      object: nil
+    )
+    if let _ = formDelegate {
+      currentInput = formDelegate.getFirstInput(self)
+    }
   }
   
   /**
@@ -137,15 +169,15 @@ public class Form: UIScrollView {
    */
   func textFieldReturnedFired(notification: NSNotification) {
     if let textfield = notification.object as? FormInput {
-      if let index: Int = indexForInput(textfield) {
-        if isLastInput(textfield) {
-          textfield.stopEditing()
-          resetScrollingZone()
-          if let _ = keyboardDelegate {
-            keyboardDelegate.goReturnKeyTouched()
-          }
-        } else {
-          inputs[index + 1].becomeFirstResponder()
+      if isLastInput(textfield) {
+        textfield.stopEditing()
+        resetScrollingZone()
+        if let _ = formDelegate {
+          formDelegate.goReturnKeyTouched()
+        }
+      } else {
+        if let _ = formDelegate {
+          formDelegate.getNextInput(self, currentInput: currentInput)?.becomeFirstResponder()
         }
       }
     }
@@ -167,21 +199,29 @@ public class Form: UIScrollView {
   }
   
   /**
+   Stores the current textfield.
+   
+   - Parameter notification: the received notification
+   */
+  func textFieldBecameFirstResponder(notification: NSNotification) {
+    if let textfield = notification.object as? FormInput {
+      currentInput = textfield
+    }
+  }
+  
+  /**
    Checks if the given input is the last one.
    
    - Parameter input: the input to compare
    */
   private func isLastInput(input: FormInput) -> Bool {
-    return input == inputs.last
-  }
-  
-  /**
-   Gives the index of a given input
-   
-   - Parameter input: the input to get the index.
-   */
-  private func indexForInput(input: FormInput) -> Int? {
-    return inputs.indexOf(input)
+    if let _ = formDelegate {
+      if let nextInput: FormInput = formDelegate.getNextInput(self, currentInput: currentInput) {
+        return false
+      }
+    }
+    
+    return true
   }
 }
 
