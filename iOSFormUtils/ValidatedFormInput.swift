@@ -34,7 +34,7 @@ public protocol ValidatedFormInput {
 }
 
 /// Delegate protocol for validated form
-protocol ValidatedFormInputDelegate {
+public protocol ValidatedFormInputDelegate {
   /**
    To update the input displaying for error mode.
    
