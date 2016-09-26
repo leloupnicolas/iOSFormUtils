@@ -157,7 +157,9 @@ public class Form: UIScrollView {
    */
   private func resetScrollingZone() {
     viewScrolledForKeyboard = false
-    self.frame = originalFrame
+    if let _ = originalFrame {
+      self.frame = originalFrame
+    }
   }
   
   // MARK: NSNotification listeners
