@@ -54,10 +54,7 @@ public class Form: UIScrollView {
   public var formDelegate: FormDelegate!
   
   /// The current input which has been focused
-  private var currentInput: FormInput!
-  
-  /// The form inputs
-  public var inputs: [FormInput] = [] {
+  private var currentInput: FormInput! {
     didSet {
       handleInputsReturnKeys()
     }
@@ -79,7 +76,6 @@ public class Form: UIScrollView {
     
     if let input: FormInput = view as? FormInput {
       input.formInputDelegate = self
-      inputs.append(input)
     }
   }
   
@@ -118,6 +114,7 @@ public class Form: UIScrollView {
    Handles return keys type for inputs
    */
   private func handleInputsReturnKeys() {
+    let inputs = getOrderedInputs()
     for input in inputs {
       if let textField: UITextField = input as? UITextField {
         if textField == inputs.last as? UITextField {
@@ -224,6 +221,24 @@ public class Form: UIScrollView {
     }
     
     return true
+  }
+  
+  /**
+   Gets the ordered inputs of the form
+   
+   - Return: the ordered inputs
+   */
+  func getOrderedInputs() -> [FormInput] {
+    var inputs: [FormInput] = []
+    if let _ = formDelegate {
+      var inputToAdd: FormInput? = formDelegate.getFirstInput(self)
+      while nil != inputToAdd {
+        inputs.append(inputToAdd!)
+        inputToAdd = formDelegate.getNextInput(self, currentInput: inputToAdd!)
+      }
+    }
+    
+    return inputs
   }
 }
 

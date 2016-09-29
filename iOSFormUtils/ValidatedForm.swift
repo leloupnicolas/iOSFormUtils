@@ -20,7 +20,7 @@ public class ValidatedForm: Form {
    - Return: validation result
    */
   public func validate() -> Bool {
-    for input in inputs {
+    for input in getOrderedInputs() {
       if (!input.validateFormat()) {
         return false
       }
