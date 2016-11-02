@@ -24,7 +24,7 @@ public protocol FormDelegate {
    
    - Return: The first input.
    */
-  func getFirstInput(form: Form) -> FormInput
+  func getFirstInput(_ form: Form) -> FormInput
   
   /*
    Returns the following input of a form input
@@ -34,12 +34,12 @@ public protocol FormDelegate {
    
    - Return: If the current input is the last one, nil. If not, the following input.
    */
-  func getNextInput(form: Form, currentInput: FormInput) -> FormInput?
+  func getNextInput(_ form: Form, currentInput: FormInput) -> FormInput?
 }
 
 // MARK: Class
 /// UIScrollView child class for forms handling
-public class Form: UIScrollView {
+open class Form: UIScrollView {
   // MARK: Class properties
   /// The original frame of the form
   var originalFrame: CGRect!
@@ -51,10 +51,10 @@ public class Form: UIScrollView {
   var keyboardViewHeight: CGFloat = 216
   
   /// The stored delegate
-  public var formDelegate: FormDelegate!
+  open var formDelegate: FormDelegate!
   
   /// The current input which has been focused
-  private var currentInput: FormInput! {
+  fileprivate var currentInput: FormInput! {
     didSet {
       handleInputsReturnKeys()
     }
@@ -71,7 +71,7 @@ public class Form: UIScrollView {
     commonInit()
   }
   
-  override public func addSubview(view: UIView) {
+  override open func addSubview(_ view: UIView) {
     super.addSubview(view)
     
     if let input: FormInput = view as? FormInput {
@@ -84,25 +84,25 @@ public class Form: UIScrollView {
   /**
    Custom initializer
    */
-  private func commonInit() {
-    NSNotificationCenter.defaultCenter().addObserver(
+  fileprivate func commonInit() {
+    NotificationCenter.default.addObserver(
       self,
       selector: #selector(Form.keyboardShown(_:)),
-      name: UIKeyboardDidShowNotification,
+      name: NSNotification.Name.UIKeyboardDidShow,
       object: nil
     )
     
-    NSNotificationCenter.defaultCenter().addObserver(
+    NotificationCenter.default.addObserver(
       self,
       selector: #selector(Form.textFieldReturnedFired(_:)),
-      name: tfReturnedNotifName,
+      name: NSNotification.Name(rawValue: tfReturnedNotifName),
       object: nil
     )
     
-    NSNotificationCenter.defaultCenter().addObserver(
+    NotificationCenter.default.addObserver(
       self,
       selector: #selector(Form.textFieldBecameFirstResponder(_:)),
-      name: tfBecameFirstResponderNotifName,
+      name: NSNotification.Name(rawValue: tfBecameFirstResponderNotifName),
       object: nil
     )
     if let _ = formDelegate {
@@ -113,14 +113,14 @@ public class Form: UIScrollView {
   /**
    Handles return keys type for inputs
    */
-  private func handleInputsReturnKeys() {
+  fileprivate func handleInputsReturnKeys() {
     let inputs = getOrderedInputs()
     for input in inputs {
       if let textField: UITextField = input as? UITextField {
         if textField == inputs.last as? UITextField {
-          textField.returnKeyType = .Go
+          textField.returnKeyType = .go
         } else {
-          textField.returnKeyType = .Next
+          textField.returnKeyType = .next
         }
       }
     }
@@ -130,7 +130,7 @@ public class Form: UIScrollView {
    Updates the scrollview frame when keyboard appears.
    Scrolls to make the current field visible.
    */
-  private func minimizeScrollingZone(input: FormInput) {
+  fileprivate func minimizeScrollingZone(_ input: FormInput) {
     if (!viewScrolledForKeyboard) {
       viewScrolledForKeyboard = true
       originalFrame = self.frame
@@ -144,15 +144,15 @@ public class Form: UIScrollView {
       self.frame = newFrame
     }
     
-    UIView.animateWithDuration(0.2) {
+    UIView.animate(withDuration: 0.2, animations: {
       self.contentOffset = CGPoint(x: 0, y: input.frame.origin.y - self.frame.height/2 + input.frame.height/2)
-    }
+    }) 
   }
   
   /**
    Resets the scrolling zone to its original value.
    */
-  private func resetScrollingZone() {
+  fileprivate func resetScrollingZone() {
     viewScrolledForKeyboard = false
     if let _ = originalFrame {
       self.frame = originalFrame
@@ -166,7 +166,7 @@ public class Form: UIScrollView {
    
    - Parameter notification: the received notification.
    */
-  func textFieldReturnedFired(notification: NSNotification) {
+  func textFieldReturnedFired(_ notification: Notification) {
     if let textfield = notification.object as? FormInput {
       if isLastInput(textfield) {
         textfield.stopEditing()
@@ -187,12 +187,12 @@ public class Form: UIScrollView {
    
    - Parameter notification: the received notification
    */
-  func keyboardShown(notification: NSNotification) {
-    let info  = notification.userInfo!
-    let value: AnyObject = info[UIKeyboardFrameEndUserInfoKey]!
+  func keyboardShown(_ notification: Notification) {
+    let info  = (notification as NSNotification).userInfo!
+    let value: AnyObject = info[UIKeyboardFrameEndUserInfoKey]! as AnyObject
     
-    let rawFrame = value.CGRectValue
-    let keyboardFrame = self.convertRect(rawFrame, fromView: nil)
+    let rawFrame = value.cgRectValue
+    let keyboardFrame = self.convert(rawFrame!, from: nil)
     
     keyboardViewHeight = keyboardFrame.height
   }
@@ -202,7 +202,7 @@ public class Form: UIScrollView {
    
    - Parameter notification: the received notification
    */
-  func textFieldBecameFirstResponder(notification: NSNotification) {
+  func textFieldBecameFirstResponder(_ notification: Notification) {
     if let textfield = notification.object as? FormInput {
       currentInput = textfield
     }
@@ -213,7 +213,7 @@ public class Form: UIScrollView {
    
    - Parameter input: the input to compare
    */
-  private func isLastInput(input: FormInput) -> Bool {
+  fileprivate func isLastInput(_ input: FormInput) -> Bool {
     if let _ = formDelegate {
       if let nextInput: FormInput = formDelegate.getNextInput(self, currentInput: currentInput) {
         return false
@@ -244,11 +244,11 @@ public class Form: UIScrollView {
 
 // MARK: Extensions
 extension Form: FormInputDelegate {
-  public func didEnterEditionMode(input: FormInput) {
-    dispatch_async(dispatch_get_main_queue()) {
+  public func didEnterEditionMode(_ input: FormInput) {
+    DispatchQueue.main.async {
       self.minimizeScrollingZone(input)
     }
   }
   
-  public func didExitEditionMode(input: FormInput) {}
+  public func didExitEditionMode(_ input: FormInput) {}
 }

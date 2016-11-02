@@ -15,25 +15,25 @@ let tfReturnedNotifName = "textFieldReturned"
 
 /// Delegate protocol for FormInput
 public protocol FormInputDelegate {
-  func didEnterEditionMode(input: FormInput)
-  func didExitEditionMode(input: FormInput)
+  func didEnterEditionMode(_ input: FormInput)
+  func didExitEditionMode(_ input: FormInput)
 }
 
 /// Data source protocol for FormInput
 public protocol FormInputDataSource {
-  func applyCustomInit(input: FormInput)
+  func applyCustomInit(_ input: FormInput)
 }
 
 // MARK: Class
 /// UITextfield child class for easy form inputs handling
-public class FormInput: UITextField {
+open class FormInput: UITextField {
   // MARK: Class variables
-  public var inputDataSource: FormInputDataSource!
-  public var formInputDelegate: FormInputDelegate!
-  private var inputAccessory: UIView!
-  private var validationHandler: ValidatedFormInput!
-  public var validationDelegate: ValidatedFormInputDelegate!
-  public var validationDataSource: ValidatedFormInputDataSource!
+  open var inputDataSource: FormInputDataSource!
+  open var formInputDelegate: FormInputDelegate!
+  fileprivate var inputAccessory: UIView!
+  fileprivate var validationHandler: ValidatedFormInput!
+  open var validationDelegate: ValidatedFormInputDelegate!
+  open var validationDataSource: ValidatedFormInputDataSource!
   
   // MARK: Superclass overrides
   override init(frame: CGRect) {
@@ -51,7 +51,7 @@ public class FormInput: UITextField {
   /**
    Main initializer
    */
-  public func commonInit() {
+  open func commonInit() {
     self.delegate = self
     self.validationHandler = self
     
@@ -65,32 +65,32 @@ public class FormInput: UITextField {
   /**
    Stops the current edition.
    */
-  public func stopEditing() {
-    NSNotificationCenter.defaultCenter().postNotificationName(tfResignedFirstResponderNotifName, object: self)
+  open func stopEditing() {
+    NotificationCenter.default.post(name: Notification.Name(rawValue: tfResignedFirstResponderNotifName), object: self)
     self.resignFirstResponder()
   }
 }
 
 // MARK: Extensions
 extension FormInput: UITextFieldDelegate {
-  public func textFieldDidBeginEditing(textField: UITextField) {
+  public func textFieldDidBeginEditing(_ textField: UITextField) {
     if let _ = formInputDelegate {
       formInputDelegate.didEnterEditionMode(self)
     }
     if let _ = validationDelegate {
       validationDelegate.didExitErrorMode(self)
     }
-    NSNotificationCenter.defaultCenter().postNotificationName(tfBecameFirstResponderNotifName, object: self)
+    NotificationCenter.default.post(name: Notification.Name(rawValue: tfBecameFirstResponderNotifName), object: self)
   }
   
-  public func textFieldDidEndEditing(textField: UITextField) {
+  public func textFieldDidEndEditing(_ textField: UITextField) {
     if let _ = formInputDelegate {
       formInputDelegate.didExitEditionMode(self)
     }
   }
   
-  public func textFieldShouldReturn(textField: UITextField) -> Bool {
-    NSNotificationCenter.defaultCenter().postNotificationName(tfReturnedNotifName, object: self)
+  public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    NotificationCenter.default.post(name: Notification.Name(rawValue: tfReturnedNotifName), object: self)
     
     return true;
   }

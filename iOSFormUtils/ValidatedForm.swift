@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: Class
 /// Form class able to validates its fields
-public class ValidatedForm: Form {
+open class ValidatedForm: Form {
   
   // MARK: Public own methods
   
@@ -19,7 +19,7 @@ public class ValidatedForm: Form {
    
    - Return: validation result
    */
-  public func validate() -> Bool {
+  open func validate() -> Bool {
     for input in getOrderedInputs() {
       if (!input.validateFormat()) {
         return false

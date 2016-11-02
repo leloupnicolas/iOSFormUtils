@@ -41,14 +41,14 @@ public protocol ValidatedFormInputDelegate {
    - Parameter input: The input
    - Parameter errorType: The error description
    */
-  func didEnterErrorMode(input: ValidatedFormInput, errorType: String)
+  func didEnterErrorMode(_ input: ValidatedFormInput, errorType: String)
   
   /**
    To update the input without the error mode.
    
    - Parameter input: The input
    */
-  func didExitErrorMode(input: ValidatedFormInput)
+  func didExitErrorMode(_ input: ValidatedFormInput)
 }
 
 /// Data Source protocol for validated form
@@ -58,7 +58,7 @@ public protocol ValidatedFormInputDataSource {
    
    - Parameter input: The input
    */
-  func validationTypeForInput(input: ValidatedFormInput) -> ValidatedFormInputType
+  func validationTypeForInput(_ input: ValidatedFormInput) -> ValidatedFormInputType
 }
 
 // MARK: Extensions
@@ -72,23 +72,23 @@ extension FormInput: ValidatedFormInput {
         }
       case .Email :
         let emailValidator: NSPredicate = NSPredicate(format: "SELF MATCHES %@", "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}")
-        if (emailValidator.evaluateWithObject(self.text)) {
+        if (emailValidator.evaluate(with: self.text)) {
           return true;
         }
       case .ZipCode :
         let zipCodeValidator: NSPredicate = NSPredicate(format: "SELF MATCHES %@", "((0[1-9])|([1-8][0-9])|(9[0-8])|(2A)|(2B))[0-9]{3}")
-        if (zipCodeValidator.evaluateWithObject(self.text)) {
+        if (zipCodeValidator.evaluate(with: self.text)) {
           return true;
         }
       case .Date :
-        let dateFormatter = NSDateFormatter()
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd/MM/YYYY"
-        if let _ = dateFormatter.dateFromString(self.text!) {
+        if let _ = dateFormatter.date(from: self.text!) {
           return true
         }
       case .Phone :
         let phoneValidator: NSPredicate = NSPredicate(format: "SELF MATCHES %@", "(0[1-9]([-. ]?[0-9]{2}){4})")
-        if (phoneValidator.evaluateWithObject(self.text)) {
+        if (phoneValidator.evaluate(with: self.text)) {
           return true;
         }
       case .NoValidation :
