@@ -7,13 +7,11 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		C88353E81CFDBA6900C1E8E3 /* AccessorizedFormInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AccessorizedFormInput.swift; path = iOSFormUtils/AccessorizedFormInput.swift; sourceTree = "<group>"; };
-		C8C6A7FA1CEDB48D00B9B9D8 /* test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = test.swift; path = iOSFormUtils/test.swift; sourceTree = "<group>"; };
-		C8C6A7FC1CEE092B00B9B9D8 /* plop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = plop.swift; path = iOSFormUtils/plop.swift; sourceTree = "<group>"; };
+		C8CF38E81DC9DC20002D11DF /* Form.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Form.swift; path = iOSFormUtils/Form.swift; sourceTree = "<group>"; };
+		C8CF38E91DC9DC20002D11DF /* FormInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FormInput.swift; path = iOSFormUtils/FormInput.swift; sourceTree = "<group>"; };
+		C8CF38EA1DC9DC20002D11DF /* ValidatedFormInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ValidatedFormInput.swift; path = iOSFormUtils/ValidatedFormInput.swift; sourceTree = "<group>"; };
+		C8CF38EB1DC9DC94002D11DF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C8F50C0F1CEF0A26006D8C51 /* ValidatedForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ValidatedForm.swift; path = iOSFormUtils/ValidatedForm.swift; sourceTree = "<group>"; };
-		C8F50C101CEF0A26006D8C51 /* ValidatedInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ValidatedInput.swift; path = iOSFormUtils/ValidatedInput.swift; sourceTree = "<group>"; };
-		C8F50C111CEF0A26006D8C51 /* ValidatedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ValidatedTextField.swift; path = iOSFormUtils/ValidatedTextField.swift; sourceTree = "<group>"; };
-		C8F50C121CEF0A26006D8C51 /* ValidatedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ValidatedTextView.swift; path = iOSFormUtils/ValidatedTextView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -27,13 +25,11 @@
 		C8C6A7FB1CEDBDED00B9B9D8 /* iOSFormUtils */ = {
 			isa = PBXGroup;
 			children = (
-				C88353E81CFDBA6900C1E8E3 /* AccessorizedFormInput.swift */,
+				C8CF38EB1DC9DC94002D11DF /* Info.plist */,
+				C8CF38E81DC9DC20002D11DF /* Form.swift */,
+				C8CF38E91DC9DC20002D11DF /* FormInput.swift */,
+				C8CF38EA1DC9DC20002D11DF /* ValidatedFormInput.swift */,
 				C8F50C0F1CEF0A26006D8C51 /* ValidatedForm.swift */,
-				C8F50C101CEF0A26006D8C51 /* ValidatedInput.swift */,
-				C8F50C111CEF0A26006D8C51 /* ValidatedTextField.swift */,
-				C8F50C121CEF0A26006D8C51 /* ValidatedTextView.swift */,
-				C8C6A7FA1CEDB48D00B9B9D8 /* test.swift */,
-				C8C6A7FC1CEE092B00B9B9D8 /* plop.swift */,
 			);
 			name = iOSFormUtils;
 			sourceTree = "<group>";
