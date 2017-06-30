@@ -152,7 +152,7 @@ open class Form: UIScrollView {
   /**
    Resets the scrolling zone to its original value.
    */
-  fileprivate func resetScrollingZone() {
+  open func resetScrollingZone() {
     viewScrolledForKeyboard = false
     if let _ = originalFrame {
       self.frame = originalFrame
