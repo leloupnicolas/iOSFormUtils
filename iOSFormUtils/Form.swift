@@ -116,6 +116,10 @@ open class Form: UIScrollView {
   fileprivate func handleInputsReturnKeys() {
     let inputs = getOrderedInputs()
     for input in inputs {
+      if let input: FormInput = input as? FormInput, nil == input.formInputDelegate {
+        input.formInputDelegate = self
+      }
+
       if let textField: UITextField = input as? UITextField {
         if textField == inputs.last as? UITextField {
           textField.returnKeyType = .go
