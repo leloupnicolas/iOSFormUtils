@@ -32,6 +32,7 @@ open class FormInput: UITextField {
   open var formInputDelegate: FormInputDelegate!
   fileprivate var inputAccessory: UIView!
   fileprivate var validationHandler: ValidatedFormInput!
+  fileprivate var limit: Int!
   open var validationDelegate: ValidatedFormInputDelegate!
   open var validationDataSource: ValidatedFormInputDataSource!
   
@@ -61,6 +62,13 @@ open class FormInput: UITextField {
   }
   
   // MARK: Public own methods
+
+  /**
+   Applies a custom char limit to the field
+   */
+  open func setCustomCharLimit(limit: Int?) {
+    self.limit = limit
+  }
   
   /**
    Stops the current edition.
@@ -93,6 +101,14 @@ extension FormInput: UITextFieldDelegate {
     NotificationCenter.default.post(name: Notification.Name(rawValue: tfReturnedNotifName), object: self)
     
     return true;
+  }
+
+  public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    if let _ = limit {
+      return textField.text!.characters.count < limit
+    }
+
+    return true
   }
 }
 
