@@ -30,7 +30,6 @@ iOSFormUtils helps you developping validated forms in iOS apps. You could use it
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'iOSFormUtils'
-  s.resources = 'iOSFormUtils/*.xib'
  
   s.dependency 'SBPickerSelector', '~> 1.1.0' 
   s.dependency 'UIKitExtensions', '~> 0.2.4'

@@ -74,8 +74,8 @@ open class FormInput: UITextField {
    Stops the current edition.
    */
   open func stopEditing() {
-    NotificationCenter.default.post(name: Notification.Name(rawValue: tfResignedFirstResponderNotifName), object: self)
     self.resignFirstResponder()
+    NotificationCenter.default.post(name: Notification.Name(rawValue: tfResignedFirstResponderNotifName), object: self)
   }
 }
 

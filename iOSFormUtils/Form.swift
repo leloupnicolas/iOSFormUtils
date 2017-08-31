@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SnapKit
 
 // MARK: Protocols
 
@@ -49,14 +50,15 @@ open class Form: UIScrollView {
   
   /// The keyboard frame height
   var keyboardViewHeight: CGFloat = 216
+  var currentOffSet: CGFloat = 0
   
   /// The stored delegate
-  open var formDelegate: FormDelegate!
+  public var formDelegate: FormDelegate!
   
   /// The current input which has been focused
   fileprivate var currentInput: FormInput! {
     didSet {
-      handleInputsReturnKeys()
+      minimizeScrollingZone(currentInput)
     }
   }
   
@@ -98,6 +100,13 @@ open class Form: UIScrollView {
       name: NSNotification.Name(rawValue: tfReturnedNotifName),
       object: nil
     )
+
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(Form.textFieldResignedFirstResponderFired(_:)),
+      name: NSNotification.Name(rawValue: tfResignedFirstResponderNotifName),
+      object: nil
+    )
     
     NotificationCenter.default.addObserver(
       self,
@@ -110,10 +119,18 @@ open class Form: UIScrollView {
     }
   }
   
+  public func reloadData() {
+    if let _ = formDelegate {
+      currentInput = formDelegate.getFirstInput(self)
+    }
+    self.handleInputsReturnKeys()
+    self.resetScrollingZone()
+  }
+  
   /**
    Handles return keys type for inputs
    */
-  fileprivate func handleInputsReturnKeys() {
+  private func handleInputsReturnKeys() {
     let inputs = getOrderedInputs()
     for input in inputs {
       if let input: FormInput = input as? FormInput, nil == input.formInputDelegate {
@@ -137,20 +154,18 @@ open class Form: UIScrollView {
   fileprivate func minimizeScrollingZone(_ input: FormInput) {
     if (!viewScrolledForKeyboard) {
       viewScrolledForKeyboard = true
-      originalFrame = self.frame
-      self.translatesAutoresizingMaskIntoConstraints = true
-      let newFrame = CGRect(
-        x: frame.origin.x,
-        y: frame.origin.y,
-        width: frame.width,
-        height: frame.height - keyboardViewHeight
-      )
-      self.frame = newFrame
+      self.snp.updateConstraints({ (maker) in
+        maker.bottom.equalTo(self.superview!.snp.bottom).offset(-keyboardViewHeight)
+      })
+      self.layoutIfNeeded()
     }
-    
-    UIView.animate(withDuration: 0.2, animations: {
-      self.contentOffset = CGPoint(x: 0, y: input.frame.origin.y - self.frame.height/2 + input.frame.height/2)
-    }) 
+ 
+    let offSetToScroll = input.frame.origin.y - self.frame.height/2 + input.frame.height/2
+    if 0 < offSetToScroll {
+      UIView.animate(withDuration: 0.2, animations: {
+        self.contentOffset = CGPoint(x: 0, y: min(offSetToScroll, self.contentSize.height - self.frame.height + input.frame.height/2))
+      })
+    }
   }
   
   /**
@@ -158,9 +173,9 @@ open class Form: UIScrollView {
    */
   open func resetScrollingZone() {
     viewScrolledForKeyboard = false
-    if let _ = originalFrame {
-      self.frame = originalFrame
-    }
+    self.snp.updateConstraints({ (maker) in
+      maker.bottom.equalTo(self.superview!.snp.bottom)
+    })
   }
   
   // MARK: NSNotification listeners
@@ -184,6 +199,15 @@ open class Form: UIScrollView {
         }
       }
     }
+  }
+
+  /**
+   Scrolling zone is layered with its original when text field resigned first respnder.
+
+   - Parameter notification: the received notification.
+   */
+  func textFieldResignedFirstResponderFired(_ notification: Notification) {
+    resetScrollingZone()
   }
   
   /**

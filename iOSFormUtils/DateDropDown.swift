@@ -9,19 +9,19 @@
 import Foundation
 import UIKit
 
-protocol DateDropDownDelegate {
+public protocol DateDropDownDelegate {
   func dropDown(_ dropDown: DateDropDown!, selectedDate value: Date!)
 }
 
-public class DateDropDown: DropDown {
-  var selectedDate: Date! {
+open class DateDropDown: DropDown {
+  public var selectedDate: Date! {
     didSet {
       if selectedDate != oldValue {
         self.refreshDateView()
       }
     }
   }
-  var dateDropDownDelegate: DateDropDownDelegate!
+  public var dateDropDownDelegate: DateDropDownDelegate!
 
   func refreshDateView() {
     let dateFormatter = DateFormatter()
@@ -29,12 +29,12 @@ public class DateDropDown: DropDown {
 
     titleTextField.text = dateFormatter.string(from: selectedDate)
     if let _ = self.dataSource {
-      titleTextField.textColor = self.dataSource.getTextColor()
-      titleTextField.font = UIFont(name: self.dataSource.getFontName(), size: self.dataSource.getFontSize())
+      titleTextField.textColor = self.uiDataSource.getTextColor()
+      titleTextField.font = UIFont(name: self.uiDataSource.getFontName(), size: self.uiDataSource.getFontSize())
     }
   }
 
-  override public func loadView() {
+  override open func loadView() {
     super.loadView()
 
     picker.pickerType = .date
