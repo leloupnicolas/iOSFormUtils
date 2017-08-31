@@ -64,7 +64,7 @@ public protocol ValidatedFormInputDataSource {
 // MARK: Extensions
 extension FormInput: ValidatedFormInput {
   public func validateFormat() -> Bool {
-    if let dataSource = validationDataSource {
+    if let _ = validationDataSource {
       switch validationDataSource.validationTypeForInput(self) {
       case .NotBlank :
         if (0 < self.text!.characters.count) {
