@@ -1,5 +1,5 @@
 //
-//  ValidatedFormInput.swift
+//  ValidatedTextInput.swift
 //  Pods
 //
 //  Created by Nicolas LELOUP on 16/09/2016.
@@ -18,13 +18,13 @@ import Foundation
  - Phone: For french phone numbers
  - Date: For basic dd/mm/yyy format
  */
-public enum ValidatedFormInputType: String {
+public enum ValidatedTextInputType: String {
   case NoValidation, NotBlank, Email, ZipCode, Phone, Date
 }
 
 // MARK: Protocols
 /// Validate input protocol
-public protocol ValidatedFormInput {
+public protocol ValidatedTextInput {
   /**
    Applies validation on the input
    
@@ -34,35 +34,35 @@ public protocol ValidatedFormInput {
 }
 
 /// Delegate protocol for validated form
-public protocol ValidatedFormInputDelegate {
+public protocol ValidatedTextInputDelegate {
   /**
    To update the input displaying for error mode.
    
    - Parameter input: The input
    - Parameter errorType: The error description
    */
-  func didEnterErrorMode(_ input: ValidatedFormInput, errorType: String)
+  func didEnterErrorMode(_ input: ValidatedTextInput, errorType: String)
   
   /**
    To update the input without the error mode.
    
    - Parameter input: The input
    */
-  func didExitErrorMode(_ input: ValidatedFormInput)
+  func didExitErrorMode(_ input: ValidatedTextInput)
 }
 
 /// Data Source protocol for validated form
-public protocol ValidatedFormInputDataSource {
+public protocol ValidatedTextInputDataSource {
   /**
    Gives a validation type for an input.
    
    - Parameter input: The input
    */
-  func validationTypeForInput(_ input: ValidatedFormInput) -> ValidatedFormInputType
+  func validationTypeForInput(_ input: ValidatedTextInput) -> ValidatedTextInputType
 }
 
 // MARK: Extensions
-extension FormInput: ValidatedFormInput {
+extension TextInput: ValidatedTextInput {
   public func validateFormat() -> Bool {
     if let _ = validationDataSource {
       switch validationDataSource.validationTypeForInput(self) {

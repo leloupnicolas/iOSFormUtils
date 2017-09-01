@@ -25,7 +25,7 @@ public protocol FormDelegate {
    
    - Return: The first input.
    */
-  func getFirstInput(_ form: Form) -> FormInput
+  func getFirstInput(_ form: Form) -> TextInput
   
   /*
    Returns the following input of a form input
@@ -35,7 +35,7 @@ public protocol FormDelegate {
    
    - Return: If the current input is the last one, nil. If not, the following input.
    */
-  func getNextInput(_ form: Form, currentInput: FormInput) -> FormInput?
+  func getNextInput(_ form: Form, currentInput: TextInput) -> TextInput?
 }
 
 // MARK: Class
@@ -56,7 +56,7 @@ open class Form: UIScrollView {
   public var formDelegate: FormDelegate!
   
   /// The current input which has been focused
-  fileprivate var currentInput: FormInput! {
+  fileprivate var currentInput: TextInput! {
     didSet {
       minimizeScrollingZone(currentInput)
     }
@@ -76,8 +76,8 @@ open class Form: UIScrollView {
   override open func addSubview(_ view: UIView) {
     super.addSubview(view)
     
-    if let input: FormInput = view as? FormInput {
-      input.formInputDelegate = self
+    if let input: TextInput = view as? TextInput {
+      input.textInputDelegate = self
     }
   }
   
@@ -133,8 +133,8 @@ open class Form: UIScrollView {
   private func handleInputsReturnKeys() {
     let inputs = getOrderedInputs()
     for input in inputs {
-      if let input: FormInput = input as? FormInput, nil == input.formInputDelegate {
-        input.formInputDelegate = self
+      if let input: TextInput = input as? TextInput, nil == input.textInputDelegate {
+        input.textInputDelegate = self
       }
 
       if let textField: UITextField = input as? UITextField {
@@ -151,7 +151,7 @@ open class Form: UIScrollView {
    Updates the scrollview frame when keyboard appears.
    Scrolls to make the current field visible.
    */
-  fileprivate func minimizeScrollingZone(_ input: FormInput) {
+  fileprivate func minimizeScrollingZone(_ input: TextInput) {
     if (!viewScrolledForKeyboard) {
       viewScrolledForKeyboard = true
       self.snp.updateConstraints({ (maker) in
@@ -186,7 +186,7 @@ open class Form: UIScrollView {
    - Parameter notification: the received notification.
    */
   func textFieldReturnedFired(_ notification: Notification) {
-    if let textfield = notification.object as? FormInput {
+    if let textfield = notification.object as? TextInput {
       if isLastInput(textfield) {
         textfield.stopEditing()
         resetScrollingZone()
@@ -231,7 +231,7 @@ open class Form: UIScrollView {
    - Parameter notification: the received notification
    */
   func textFieldBecameFirstResponder(_ notification: Notification) {
-    if let textfield = notification.object as? FormInput {
+    if let textfield = notification.object as? TextInput {
       currentInput = textfield
     }
   }
@@ -241,9 +241,9 @@ open class Form: UIScrollView {
    
    - Parameter input: the input to compare
    */
-  fileprivate func isLastInput(_ input: FormInput) -> Bool {
+  fileprivate func isLastInput(_ input: TextInput) -> Bool {
     if let _ = formDelegate {
-      if let nextInput: FormInput = formDelegate.getNextInput(self, currentInput: currentInput) {
+      if let nextInput: TextInput = formDelegate.getNextInput(self, currentInput: currentInput) {
         return false
       }
     }
@@ -256,10 +256,10 @@ open class Form: UIScrollView {
    
    - Return: the ordered inputs
    */
-  func getOrderedInputs() -> [FormInput] {
-    var inputs: [FormInput] = []
+  func getOrderedInputs() -> [TextInput] {
+    var inputs: [TextInput] = []
     if let _ = formDelegate {
-      var inputToAdd: FormInput? = formDelegate.getFirstInput(self)
+      var inputToAdd: TextInput? = formDelegate.getFirstInput(self)
       while nil != inputToAdd {
         inputs.append(inputToAdd!)
         inputToAdd = formDelegate.getNextInput(self, currentInput: inputToAdd!)
@@ -271,12 +271,12 @@ open class Form: UIScrollView {
 }
 
 // MARK: Extensions
-extension Form: FormInputDelegate {
-  public func didEnterEditionMode(_ input: FormInput) {
+extension Form: TextInputDelegate {
+  public func didEnterEditionMode(_ input: TextInput) {
     DispatchQueue.main.async {
       self.minimizeScrollingZone(input)
     }
   }
   
-  public func didExitEditionMode(_ input: FormInput) {}
+  public func didExitEditionMode(_ input: TextInput) {}
 }

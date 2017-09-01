@@ -48,17 +48,17 @@ open class DropDown: OwnView {
 
   var picker: SBPickerSelector = SBPickerSelector.picker()
   var values: [String]!
-  var currentTextField: FormInput!
-  var selectedIndex: Int!
+  var currentTextField: TextInput!
+  public var selectedIndex: Int!
 
   var mainColor: UIColor = UIColor.blue
 
   var rightIcon: UIImageView!
-  open var titleTextField: FormInput!
+  open var titleTextField: TextInput!
   var mainButton: UIButton!
 
   override open func loadView() {
-    self.titleTextField = FormInput(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+    self.titleTextField = TextInput(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     self.titleTextField.borderStyle = .none
     self.addSubview(self.titleTextField)
     
@@ -174,7 +174,7 @@ open class DropDown: OwnView {
   }
 
   func textFieldBecameFirstResponder(_ notification: Notification) {
-    if let textField: FormInput = notification.object as? FormInput {
+    if let textField: TextInput = notification.object as? TextInput {
       if textField != titleTextField {
         currentTextField = textField
       } else {

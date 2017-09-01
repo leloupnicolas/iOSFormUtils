@@ -13,28 +13,28 @@ let tfReturnedNotifName = "textFieldReturned"
 
 // MARK: Protocols
 
-/// Delegate protocol for FormInput
-public protocol FormInputDelegate {
-  func didEnterEditionMode(_ input: FormInput)
-  func didExitEditionMode(_ input: FormInput)
+/// Delegate protocol for TextInput
+public protocol TextInputDelegate {
+  func didEnterEditionMode(_ input: TextInput)
+  func didExitEditionMode(_ input: TextInput)
 }
 
-/// Data source protocol for FormInput
-public protocol FormInputDataSource {
-  func applyCustomInit(_ input: FormInput)
+/// Data source protocol for TextInput
+public protocol TextInputDataSource {
+  func applyCustomInit(_ input: TextInput)
 }
 
 // MARK: Class
 /// UITextfield child class for easy form inputs handling
-open class FormInput: UITextField {
+open class TextInput: UITextField {
   // MARK: Class variables
-  open var inputDataSource: FormInputDataSource!
-  open var formInputDelegate: FormInputDelegate!
+  open var inputDataSource: TextInputDataSource!
+  open var textInputDelegate: TextInputDelegate!
   fileprivate var inputAccessory: UIView!
-  fileprivate var validationHandler: ValidatedFormInput!
+  fileprivate var validationHandler: ValidatedTextInput!
   fileprivate var limit: Int!
-  open var validationDelegate: ValidatedFormInputDelegate!
-  open var validationDataSource: ValidatedFormInputDataSource!
+  open var validationDelegate: ValidatedTextInputDelegate!
+  open var validationDataSource: ValidatedTextInputDataSource!
   
   // MARK: Superclass overrides
   override init(frame: CGRect) {
@@ -80,10 +80,10 @@ open class FormInput: UITextField {
 }
 
 // MARK: Extensions
-extension FormInput: UITextFieldDelegate {
+extension TextInput: UITextFieldDelegate {
   public func textFieldDidBeginEditing(_ textField: UITextField) {
-    if let _ = formInputDelegate {
-      formInputDelegate.didEnterEditionMode(self)
+    if let _ = textInputDelegate {
+      textInputDelegate.didEnterEditionMode(self)
     }
     if let _ = validationDelegate {
       validationDelegate.didExitErrorMode(self)
@@ -92,8 +92,8 @@ extension FormInput: UITextFieldDelegate {
   }
   
   public func textFieldDidEndEditing(_ textField: UITextField) {
-    if let _ = formInputDelegate {
-      formInputDelegate.didExitEditionMode(self)
+    if let _ = textInputDelegate {
+      textInputDelegate.didExitEditionMode(self)
     }
   }
   
