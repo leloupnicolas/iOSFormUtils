@@ -63,12 +63,13 @@ open class DropDown: OwnView {
     self.addSubview(self.titleTextField)
     
     rightIcon = UIImageView(frame: CGRect())
+    rightIcon.contentMode = UIViewContentMode.center
     self.addSubview(rightIcon)
-
+    
     mainButton = UIButton(type: .custom)
     mainButton.addTarget(self, action: #selector(DropDown.mainButtonTouched(_:)), for: .touchUpInside)
     self.addSubview(mainButton)
-
+    
     titleTextField.snp.makeConstraints { make in
       make.leading.equalTo(self.snp.leading)
       make.height.equalTo(self)
@@ -79,6 +80,7 @@ open class DropDown: OwnView {
       make.trailing.equalTo(self)
       make.height.equalTo(self)
       make.width.equalTo(self.snp.height)
+      make.centerY.equalTo(self)
     }
     mainButton.snp.makeConstraints { maker in
       maker.edges.equalTo(self)
