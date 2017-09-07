@@ -8,6 +8,7 @@
 
 import Foundation
 import SnapKit
+import UIKit
 
 // MARK: Protocols
 
@@ -38,6 +39,10 @@ public protocol FormDelegate {
   func getNextInput(_ form: Form, currentInput: TextInput) -> TextInput?
 }
 
+public protocol FormDataSource {
+  func getContainer() -> UIView
+}
+
 // MARK: Class
 /// UIScrollView child class for forms handling
 open class Form: UIScrollView {
@@ -55,10 +60,14 @@ open class Form: UIScrollView {
   /// The stored delegate
   public var formDelegate: FormDelegate!
   
+  public var formDataSource: FormDataSource!
+  
   /// The current input which has been focused
   fileprivate var currentInput: TextInput! {
     didSet {
-      minimizeScrollingZone(currentInput)
+      if oldValue != currentInput && nil != currentInput {
+        minimizeScrollingZone(currentInput)
+      }
     }
   }
   
@@ -93,7 +102,14 @@ open class Form: UIScrollView {
       name: NSNotification.Name.UIKeyboardDidShow,
       object: nil
     )
-    
+
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(Form.keyboardHidden(_:)),
+      name: NSNotification.Name.UIKeyboardDidHide,
+      object: nil
+    )
+
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(Form.textFieldReturnedFired(_:)),
@@ -114,9 +130,9 @@ open class Form: UIScrollView {
       name: NSNotification.Name(rawValue: tfBecameFirstResponderNotifName),
       object: nil
     )
-    if let _ = formDelegate {
-      currentInput = formDelegate.getFirstInput(self)
-    }
+//    if let _ = formDelegate {
+//      currentInput = formDelegate.getFirstInput(self)
+//    }
   }
   
   public func reloadData() {
@@ -154,18 +170,19 @@ open class Form: UIScrollView {
   fileprivate func minimizeScrollingZone(_ input: TextInput) {
     if (!viewScrolledForKeyboard) {
       viewScrolledForKeyboard = true
-      self.snp.updateConstraints({ (maker) in
-        maker.bottom.equalTo(self.superview!.snp.bottom).offset(-keyboardViewHeight)
-      })
-      self.layoutIfNeeded()
+      if let _ = formDataSource {
+        self.snp.updateConstraints({ (maker) in
+          maker.bottom.equalTo(formDataSource!.getContainer().snp.bottom).offset(-keyboardViewHeight)
+        })
+      }
     }
  
-    let offSetToScroll = input.frame.origin.y - self.frame.height/2 + input.frame.height/2
-    if 0 < offSetToScroll {
-      UIView.animate(withDuration: 0.2, animations: {
-        self.contentOffset = CGPoint(x: 0, y: min(offSetToScroll, self.contentSize.height - self.frame.height + input.frame.height/2))
-      })
-    }
+//    let offSetToScroll = input.frame.origin.y - self.frame.height/2 + input.frame.height/2
+//    if 0 < offSetToScroll {
+//      UIView.animate(withDuration: 0.2, animations: {
+//        self.contentOffset = CGPoint(x: 0, y: min(offSetToScroll, self.contentSize.height - self.frame.height + input.frame.height/2))
+//      })
+//    }
   }
   
   /**
@@ -173,9 +190,11 @@ open class Form: UIScrollView {
    */
   open func resetScrollingZone() {
     viewScrolledForKeyboard = false
-    self.snp.updateConstraints({ (maker) in
-      maker.bottom.equalTo(self.superview!.snp.bottom)
-    })
+    if let _ = formDataSource {
+      self.snp.updateConstraints({ (maker) in
+        maker.bottom.equalTo(formDataSource!.getContainer().snp.bottom)
+      })
+    }
   }
   
   // MARK: NSNotification listeners
@@ -221,8 +240,16 @@ open class Form: UIScrollView {
     
     let rawFrame = value.cgRectValue
     let keyboardFrame = self.convert(rawFrame!, from: nil)
-    
+
     keyboardViewHeight = keyboardFrame.height
+
+    if let accessory = self.inputAccessoryView {
+      keyboardViewHeight += accessory.frame.height
+    }
+  }
+
+  func keyboardHidden(_ notification: Notification) {
+    resetScrollingZone()
   }
   
   /**
