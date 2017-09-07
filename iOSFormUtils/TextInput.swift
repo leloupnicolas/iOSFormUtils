@@ -104,7 +104,7 @@ extension TextInput: UITextFieldDelegate {
   }
 
   public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-    if let _ = limit {
+    if let _ = limit, "" != string {
       return textField.text!.characters.count < limit
     }
 
