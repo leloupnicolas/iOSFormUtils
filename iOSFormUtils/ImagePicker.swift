@@ -102,6 +102,7 @@ extension ImagePicker: UIImagePickerControllerDelegate, UINavigationControllerDe
   }
 
   public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+		self.imagePicker.dismiss(animated: true, completion: nil)
   }
 }
 
