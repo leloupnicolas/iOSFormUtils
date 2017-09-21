@@ -7,9 +7,12 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		8EDBB0601F73C36A00520A7B /* DateDropDown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DateDropDown.swift; path = iOSFormUtils/DateDropDown.swift; sourceTree = "<group>"; };
+		8EDBB0611F73C36A00520A7B /* DropDown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DropDown.swift; path = iOSFormUtils/DropDown.swift; sourceTree = "<group>"; };
+		8EDBB0621F73C36A00520A7B /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ImagePicker.swift; path = iOSFormUtils/ImagePicker.swift; sourceTree = "<group>"; };
+		8EDBB0631F73C36A00520A7B /* TextInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TextInput.swift; path = iOSFormUtils/TextInput.swift; sourceTree = "<group>"; };
+		8EDBB0641F73C36A00520A7B /* ValidatedTextInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ValidatedTextInput.swift; path = iOSFormUtils/ValidatedTextInput.swift; sourceTree = "<group>"; };
 		C8CF38E81DC9DC20002D11DF /* Form.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Form.swift; path = iOSFormUtils/Form.swift; sourceTree = "<group>"; };
-		C8CF38E91DC9DC20002D11DF /* FormInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FormInput.swift; path = iOSFormUtils/FormInput.swift; sourceTree = "<group>"; };
-		C8CF38EA1DC9DC20002D11DF /* ValidatedFormInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ValidatedFormInput.swift; path = iOSFormUtils/ValidatedFormInput.swift; sourceTree = "<group>"; };
 		C8CF38EB1DC9DC94002D11DF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C8F50C0F1CEF0A26006D8C51 /* ValidatedForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ValidatedForm.swift; path = iOSFormUtils/ValidatedForm.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -25,10 +28,13 @@
 		C8C6A7FB1CEDBDED00B9B9D8 /* iOSFormUtils */ = {
 			isa = PBXGroup;
 			children = (
+				8EDBB0601F73C36A00520A7B /* DateDropDown.swift */,
+				8EDBB0611F73C36A00520A7B /* DropDown.swift */,
+				8EDBB0621F73C36A00520A7B /* ImagePicker.swift */,
+				8EDBB0631F73C36A00520A7B /* TextInput.swift */,
+				8EDBB0641F73C36A00520A7B /* ValidatedTextInput.swift */,
 				C8CF38EB1DC9DC94002D11DF /* Info.plist */,
 				C8CF38E81DC9DC20002D11DF /* Form.swift */,
-				C8CF38E91DC9DC20002D11DF /* FormInput.swift */,
-				C8CF38EA1DC9DC20002D11DF /* ValidatedFormInput.swift */,
 				C8F50C0F1CEF0A26006D8C51 /* ValidatedForm.swift */,
 			);
 			name = iOSFormUtils;
